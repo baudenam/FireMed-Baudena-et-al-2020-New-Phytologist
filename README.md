@@ -5,8 +5,11 @@ Baudena M., Santana, V.M., Baeza, M.J., Bautista, S. Eppinga, M.B., Hemerik, L.,
 # Code
 The code is provided in Fortran language.
 
-File "" is the main program file
-File "" is the parameter file, 
+File "mainfire.." are the main program files
+
+File "parafire" are the parameter files,
+
+respectively for short-term and long-term experiments in the two folders.
 
 
 
