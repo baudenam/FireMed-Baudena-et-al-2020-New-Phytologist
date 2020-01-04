@@ -2,8 +2,14 @@
 !                      PROGRAM TO MODEL FIRES
 !                IN THE MEDITERRANEAN FORESTS UNDER INCREASED ARIDITY  !
 !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
-! THIS CODE HAS BEEN DEVELOPED WITHIN THE PAPER BAUDENA ET AL 2019
-! NEW PHYTOLOGIST (OCT 1ST 2019: ACCEPTED SUBJECT TO MINOR REVISIONS)
+! THIS CODE HAS BEEN DEVELOPED WITHIN THE PAPER:
+! BAUDENA ET AL 2019 NEW PHYTOLOGIST doi: 10.1111/nph.16252
+! https://doi.org/10.1111/nph.16252
+!
+! Please refer to the paper for the underlying assumptions and equations.
+! For more information on this routine, contact its author:
+! Dr. Mara Baudena m.baudena@uu.nl
+!++++++++++++++++
 
 !  THE MODEL INCLUDES 6 VEGETATION TYPES (IN ORDER OF COMPETITION)
 ! 1- QUERCUS: RESPROUTER
