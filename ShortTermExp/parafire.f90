@@ -1,6 +1,16 @@
 !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
-! parameters for "mediterrenanean fires"                                            !
+!                      PARAMETER FILE FOR
+!      MODELLING MEDITERRANEAN FOREST FIREA UNDER INCREASED ARIDITY    !
 !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
+! THIS CODE HAS BEEN DEVELOPED WITHIN THE PAPER:
+! BAUDENA ET AL 2019 NEW PHYTOLOGIST doi: 10.1111/nph.16252
+! https://doi.org/10.1111/nph.16252
+!
+! Please refer to the paper for the underlying assumptions and equations.
+! For more information on this file, contact its author:
+! Dr. Mara Baudena m.baudena@uu.nl
+! mainfile: mainfire_shortterm.f90
+!++++++++++++++++
 
 module parafire
 

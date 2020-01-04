@@ -1,10 +1,16 @@
 !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
-!                      PROGRAM TO MODEL FIRES 
-!                IN THE MEDITERRANEAN FORESTS UNDER INCREASED ARIDITY  !
+!                      PARAMETER FILE FOR
+!      MODELLING MEDITERRANEAN FOREST FIREA UNDER INCREASED ARIDITY    !
 !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
-! THIS CODE HAS BEEN DEVELOPED WITHIN THE PAPER BAUDENA ET AL 2019
-! NEW PHYTOLOGIST (OCT 1ST 2019: ACCEPTED SUBJECT TO MINOR REVISIONS)
-
+! THIS CODE HAS BEEN DEVELOPED WITHIN THE PAPER:
+! BAUDENA ET AL 2019 NEW PHYTOLOGIST doi: 10.1111/nph.16252
+! https://doi.org/10.1111/nph.16252
+!
+! Please refer to the paper for the underlying assumptions and equations.
+! For more information on this routine, contact its author:
+! Dr. Mara Baudena m.baudena@uu.nl
+!++++++++++++++++
+!
 !  THE MODEL INCLUDES 6 VEGETATION TYPES (IN ORDER OF COMPETITION)
 ! 1- QUERCUS: RESPROUTER
 ! 2- P. HALEPENSIS: SEEDER
@@ -12,9 +18,9 @@
 ! 4- ULEX         | SHRUB SEEDERS
 ! 5- CISTUS       |
 ! 6- BRACHIPODIUM: GRASS RESPROUTER
-
+!
 ! THIS VERSION IS USED TO SIMULATE SHORTER TIMESCALES,
-! RELEVANT IN A HUMAN, CLIMATE CHANGE CONTEST.
+! RELEVANT IN CLIMATE CHANGE CONTEXT.
 !
 !   1- RUN LENGTH: 100Y
 !   2- # OF DIFFERENT FIRE STOCHASTIC SEQUENCES (RANDOM SEEDS): 100
@@ -176,7 +182,8 @@ end program mainfire_shortterm
 
 !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
 
-        subroutine rk4(tt,y,dydx,yout,g) ! RUNGE-KUPTA INTEGRATION ROUTINE
+        subroutine rk4(tt,y,dydx,yout,g)
+!       THIS SUBROUTING INTEGRATE THE DIFFERENTIAL EQUATIONS USING RUNGE-KUPTA 4 INTEGRATION SCHEME
         use parafire
         
         implicit none
@@ -202,7 +209,8 @@ end program mainfire_shortterm
 
 !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
 
-        subroutine derivs(tt,v,dv,a) ! RIGHT HAND SIDE OF ODEs
+        subroutine derivs(tt,v,dv,a)
+!       ROUTINE CALCULATING THE RIGHT HAND SIDE OF MODEL DIFFERENTIAL EQUATIONS
 !       v vegetation cover, dv derivatives
         use parafire
         
@@ -211,6 +219,7 @@ end program mainfire_shortterm
         double precision,dimension(6)  :: v,dv
         double precision :: a(6), aa(6) ! ALPHA IS ZERO ALWAYS FOR RESPROUTERS (1&6)
 
+    ! NORMALIZES ALPHA (DENOMINATOR IN EQUATION SUPPLEMENTARY MATERIAL) AND MULTIPLIES BY C
         aa=C*a/(a(2)+a(3)+a(4)+a(5)+.0001)*(1-v(1)-v(2)-v(3)-v(4)-v(5)-v(6))
         
         dv(1)=c1*v(1)*(1-v(1))-m1*v(1)
@@ -226,6 +235,9 @@ end program mainfire_shortterm
 !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
 
         subroutine alphacalc(tl,dtl,iifire,vavf,v,sb,a)
+!       ROUTINE FOR CALCULATING ALPHAs (NB WITHOUT NORMALIZATION AND C, SO IN FACT
+!       ROUTINE IS CALCULATING \gamma*S; C and NORMALIZ. ARE IN THE DERIVS SUBROUTINE)
+
         use parafire
         
         implicit none
@@ -276,6 +288,7 @@ end program mainfire_shortterm
 !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
 
       subroutine fireocc(b,iifire,bout)
+!       THIS ROUTINE RECALCULATE VEGETATION RIGHT AFTER A FIRE (OTHERWISE IT LEAVES IT UNTOUCHED)
       use parafire
       
       implicit none
@@ -297,7 +310,8 @@ end program mainfire_shortterm
 
 !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
 
-      FUNCTION RAN3(IDUM) ! NUMERICAL RECIPES
+      FUNCTION RAN3(IDUM)
+!       RANDOM NUMBER GENERATOR - FROM NUMERICAL RECIPES IN FORTRAN
       SAVE
       PARAMETER (MBIG=1000000000,MSEED=161803398,MZ=0,FAC=1.E-9)
       DIMENSION MA(55)
