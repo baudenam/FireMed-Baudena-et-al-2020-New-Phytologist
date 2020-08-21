@@ -3,7 +3,7 @@
 !      MODELLING MEDITERRANEAN FOREST FIREA UNDER INCREASED ARIDITY    !
 !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
 ! THIS CODE HAS BEEN DEVELOPED WITHIN THE PAPER:
-! BAUDENA ET AL 2019 NEW PHYTOLOGIST doi: 10.1111/nph.16252
+! BAUDENA ET AL 2020 NEW PHYTOLOGIST doi: 10.1111/nph.16252
 ! https://doi.org/10.1111/nph.16252
 !
 ! Please refer to the paper for the underlying assumptions and equations.
@@ -60,46 +60,30 @@ integer,parameter :: dimfv =maxT*365                    ! DIMENSION OF FIRE VECT
 ! ALSO: d,  Number of years for integration
 real,parameter   :: h   = 1               ! d, delta t of integration LEAVE IT TO 1 DAY,DO
 real    :: hy=h/365                      ! y, delta t of integration
-!real    :: Tvect(4)=(/5, 20,50,100/)! y, periods of fire occurence
-real    :: Tvect(4)=(/10,20,30,40/)! y, periods of fire occurence
-integer :: ifire  = 2               ! 1 to 4, index of Tvect
-!integer :: Tmoist = 20              ! d, periods of colonization perturbation
 
-!real :: l(6)=(/.002, 0.1, .02, 0.05, .143, .4/) ! y^-1 flammability frequencies (before Ramon) -> I INVENTED THESE NUMBERS IT SEEMS! SO NO USE
-!real :: l(6)=(/.002, 0.05, .0666667, 0.1, .1, .1/) ! y^-1 flammability frequencies (advice Ramon)
-real :: l0(6)=(/.002, 0.05, .0666667, 0.1, .1, .1/) ! y^-1 flammability frequencies (from Ramon's, increased for experiments)
-!real :: l(6)
-!real :: l(6)=(/.002, 0.04, .0666667, 0.1, .1, .2/) ! y^-1 flammability frequencies (advice J&V)
-real :: l(6)=(/.00, 0., .0, 0.0, .0, .0/) ! y^-1 zero flammability frequencies -> no fire
-real :: flammincr(5)=(/.0, .2, .5, 2., 4./)       ! flammability increase because of drought
+real :: l(6)=(/.0, 0., .0, 0.0, .0, .0/)            ! IT GETS RECALCULATED IN THE LOOP SCRIPTS
+real :: l0(6)=(/.002, 0.05, .0666667, 0.1, .1, .1/) ! y^-1, BASELINE flammability frequencies ( increased for experiments)
+real :: flammincr(5)=(/.0, .2, .5, 2., 4./)         ! flammability increase because of drought
 
-real    :: eps    = .0001             ! y^-1, minimum fire frequency when feedback
-real    :: fracR(6)  = (/0.,0.,0.,0.,0.,0.4/)             ! fraction of resprouter surviving a fire
-!real    :: M      = 100             ! value of the max seed production 1-2y after fire
-real    :: aseed = 1               ! y^-1; param (a)dimensionalising the Seeds
-!real    :: amax(6)= (/0., 20., .001, .001,.001 ,0./)      ! value of the max seed production (FOR PINES:1-2y after fire)
+real    :: eps    = .0001                           ! y^-1, minimum fire frequency when feedback
+real    :: fracR(6)  = (/0.,0.,0.,0.,0.,0.4/)       ! fraction of resprouter surviving a fire (recalculated in the loop script)
+
+! SEEDBANK AND GERMINATION:
+real    :: aseed = 1                ! y^-1; param (a)dimensionalising the Seeds
 real    :: amp    = 0.1             ! tanh width for seed germination
-real    :: amp2   = 4.             ! tanh width for pine maturity
-!real    :: beta   = 25             ! y, shrub seeds half life
+real    :: amp2   = 4.              ! tanh width for pine maturity
 real    :: pmat   = 12              ! y, pine maturity
 real    :: pseed  = 2               ! y, end of pine seed germination stimulation after fire
-real    :: gp(6)  = (/0., .13, .09, .08, .03, 0./) ! %, seed germination percent after fire
-real    :: sgp(6) = (/0., .31, .36, .36, .26, 0./) ! %, seedling survival
-real    :: e(6) = (/0., 1., 0.5, 0.1, .1, 0./) ! % 1/{# seed that would guarantee dominance, pine=1}
-real    :: ms(6) = (/0., .0, .1, .01, .02, 0./)    ! mean seed decay rate (y^-1) from expert estimation of seed durability
-real    :: ss(6) = (/0., 0., .45, .8, .75, 0./)! (/0., 0., .3, .8, .75, 0./)      ! %, seed survival to fire (NB THIS CAN CHANGE  SEE DOC -> VARY THIS PARAM)
-real    :: sp(6) = (/0., 1., 48., 18., 242., 0./)  ! seed production in proportion to pine
-!real    :: C(6) =  (/.0, .01, .01, .01, .01, .01/)       ! conversion rate from seeds to (%space per y-1)
-real    :: C = .014                  ! FROM OPTIMIZATION
-!real    :: Cvec(4) = (/.01, .1, 1., 10./)
+real    :: gp(6)  = (/0., .13, .09, .08, .03, 0./)  ! %, seed germination percent after fire
+real    :: sgp(6) = (/0., .31, .36, .36, .26, 0./)  ! %, seedling survival
+real    :: e(6) = (/0., 1., 0.5, 0.1, .1, 0./)      ! % 1/{# seed that would guarantee dominance, pine=1}
+real    :: ms(6) = (/0., .0, .1, .01, .02, 0./)     ! mean seed decay rate (y^-1) from expert estimation of seed durability
+real    :: ss(6) = (/0., 0., .45, .8, .75, 0./)     ! %, seed survival to fire
+real    :: sp(6) = (/0., 1., 48., 18., 242., 0./)   ! seed production in proportion to pine
+real    :: C = .014                  ! ! conversion rate from seeds to (%space per y-1), obtained FROM OPTIMIZATION
+
 real    :: minfirerettime = 2       ! y
 integer :: idumout ! seed for fire stoch
-
-! FIRE VECTORS
-real,dimension(dimfv)    :: firev ! DAYS FROM LAST FIRE EVENT: 0=FIRE, #=DAYS AFTER FIRES
-real,dimension(dimfv)    :: deltaf ! # DAYS BETWEEN LAST TWO FIRE EVENTS
-integer,dimension(dimfv) :: ifv    !  0=NO FIRE, 1=FIRE
-
 
 ! CONSTANTS
 DOUBLE PRECISION, PARAMETER :: pi = 3.141592653589d0
