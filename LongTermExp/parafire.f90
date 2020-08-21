@@ -3,7 +3,7 @@
 !      MODELLING MEDITERRANEAN FOREST FIREA UNDER INCREASED ARIDITY    !
 !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
 ! THIS CODE HAS BEEN DEVELOPED WITHIN THE PAPER:
-! BAUDENA ET AL 2019 NEW PHYTOLOGIST doi: 10.1111/nph.16252
+! BAUDENA ET AL 2020 NEW PHYTOLOGIST doi: 10.1111/nph.16252
 ! https://doi.org/10.1111/nph.16252
 !
 ! Please refer to the paper for the underlying assumptions and equations.
@@ -58,21 +58,19 @@ character (len=15)::  filelfdb='bLoopFdbdi.dat'
 
 
 ! OTHER PARAMS
-integer, parameter :: maxT   = 10000              ! y,  Number of years FROM 1ST FIRE when to stop integration (LONGER THAN integration time)
-integer,parameter :: dimfv =maxT*365    ! DIMENSION OF FIRE VECTOR (ONE A DAY)
-                                        ! ALSO: d,  Number of years for integration
-real,parameter   :: h   = 1             ! d, delta t of integration LEAVE IT TO 1 DAY,DO
-real    :: hy=h/365                     ! y, delta t of integration
-real    :: Tvect(4)=(/10,20,30,40/)     ! y, periods of fire occurence
-integer :: ifire  = 2                   ! 1 to 4, index of Tvect
+integer, parameter  :: maxT   = 10000               ! y,  Number of years FROM 1ST FIRE when to stop integration (LONGER THAN integration time)
+integer,parameter   :: dimfv =maxT*365              ! DIMENSION OF FIRE VECTOR (ONE A DAY)
+                                                    ! ALSO: d,  Number of years for integration
+real,parameter   :: h   = 1                         ! d, delta t of integration LEAVE IT TO 1 DAY,DO
+real    :: hy=h/365                                 ! y, delta t of integration
 
 ! flammabilities (y^-1 zero flammability frequencies -> no fire)
-real :: l(6)=(/.00, 0., .0, 0.0, .0, .0/)           ! IT GETS RECALCULATED IN THE LOOP SCRIPTS
+real :: l(6)=(/.0, 0., .0, 0.0, .0, .0/)            ! IT GETS RECALCULATED IN THE LOOP SCRIPTS
 real :: l0(6)=(/.002, 0.05, .0666667, 0.1, .1, .1/) ! y^-1, BASELINE flammability frequencies ( increased for experiments)
-real :: flammincr(5)=(/.0, .2, .5, 2., 4./)       ! flammability increase because of drought
+real :: flammincr(5)=(/.0, .2, .5, 2., 4./)         ! flammability increase because of drought
 
-real    :: eps    = .0001             ! y^-1, minimum fire frequency when feedback
-real    :: fracR(6)  = (/0.,0.,0.,0.,0.,0.4/)             ! fraction of resprouter surviving a fire
+real    :: eps    = .0001                           ! y^-1, minimum fire frequency when feedback
+real    :: fracR(6)  = (/0.,0.,0.,0.,0.,0.4/)       ! fraction of resprouter surviving a fire (recalculated in the loop script)
 
 ! SEEDBANK AND GERMINATION:
 real    :: aseed = 1                ! y^-1; param (a)dimensionalising the Seeds
@@ -90,12 +88,6 @@ real    :: C = .014                  ! ! conversion rate from seeds to (%space p
 
 real    :: minfirerettime = 2       ! y
 integer :: idumout ! seed for fire stoch
-
-! FIRE VECTORS (FOR NO FDB RUNS)
-real,dimension(dimfv)    :: firev ! DAYS FROM LAST FIRE EVENT: 0=FIRE, #=DAYS AFTER FIRES
-real,dimension(dimfv)    :: deltaf ! # DAYS BETWEEN LAST TWO FIRE EVENTS
-integer,dimension(dimfv) :: ifv    !  0=NO FIRE, 1=FIRE
-
 
 ! CONSTANTS
 DOUBLE PRECISION, PARAMETER :: pi = 3.141592653589d0
