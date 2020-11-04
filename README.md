@@ -1,4 +1,4 @@
-# Codes and data of the paper: Baudena et al 2019 New Phytologist "Increased aridity drives post-fire recovery of Mediterranean forests towards open shrublands" 
+# Codes and data of the paper: Baudena et al 2020 New Phytologist "Increased aridity drives post-fire recovery of Mediterranean forests towards open shrublands" 
 Baudena M., Santana, V.M., Baeza, M.J., Bautista, S. Eppinga, M.B., Hemerik, L., Mayor A.G., Rodriguez, F., Valdecantos, A.,  Vallejo, V.R., Vasques, A., Rietkerk, M.
 https://doi.org/10.1111/nph.16252
 
