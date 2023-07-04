@@ -3,12 +3,19 @@
 !                IN THE MEDITERRANEAN FORESTS UNDER INCREASED ARIDITY  !
 !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
 ! THIS CODE HAS BEEN DEVELOPED WITHIN THE PAPER:
-! BAUDENA ET AL 2019 NEW PHYTOLOGIST doi: 10.1111/nph.16252
+! 
+! Baudena, M., Santana, V.M., Baeza, M.J., Bautista, S., Eppinga, M.B., 
+! Hemerik, L., Garcia Mayor, A., Rodriguez, F., Valdecantos, A., Vallejo, 
+! V.R., Vasques, A. and Rietkerk, M. (2020), 
+! Increased aridity drives post-fire recovery of Mediterranean forests 
+! towards open shrublands. New Phytol, 225: 1500-1515. 
 ! https://doi.org/10.1111/nph.16252
 !
 ! Please refer to the paper for the underlying assumptions and equations.
 ! For more information on this routine, contact its author:
-! Dr. Mara Baudena m.baudena@uu.nl
+! Dr. Mara Baudena m.baudena@isac.cnr.it
+! It includes a correction to avoid double return times (see Baudena et al 
+! 2023, corrigendum to the above)
 !++++++++++++++++
 
 !  THE MODEL INCLUDES 6 VEGETATION TYPES (IN ORDER OF COMPETITION)
@@ -104,7 +111,7 @@ do icol=1,4              ! loop on c1 values
           numd=1/(l(1)*b(1)+l(2)*b(2)+l(3)*b(3)+l(4)*b(4)+l(5)*b(5)+l(6)*b(6)+eps)   ! years (from about 2 to 500 y return time)
           numok=nint(numd)
           num=nint(dummy*365*numok)              ! days
-          if (num.eq.numok*365 .and. firevf>minfirerettime*365.) then
+          if (num.eq.numok*365-1 .and. firevf>minfirerettime*365.) then ! correction to the code to avoid x2 return times
             iifire=1                            ! fire!
             deltaff=firevf
             firevf=0.
@@ -140,7 +147,7 @@ do icol=1,4              ! loop on c1 values
         numd=1/(l(1)*b(1)+l(2)*b(2)+l(3)*b(3)+l(4)*b(4)+l(5)*b(5)+l(6)*b(6)+eps)   ! years (from about 2 to 500 y return time)
         numok=nint(numd)
         num=nint(dummy*365*numok)              ! days
-        if (num.eq.numok*365 .and. firevf>minfirerettime*365.) then
+        if (num.eq.numok*365-1 .and. firevf>minfirerettime*365.) then ! correction to the code to avoid x2 return times
             iifire=1                            ! fire!
             deltaff=firevf
             firevf=0.
